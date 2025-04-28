@@ -9,7 +9,7 @@ Module developed to standardize the creation of Linux Virtual Machines.
 
 | Module Version | Terraform Version | AzureRM Version |
 |----------------|-------------------| --------------- |
-| v4.0.0         | v1.11.3           | 4.26.0          |
+| v1.0.0         | v1.11.3           | 4.26.0          |
 
 ## Specifying a version
 
