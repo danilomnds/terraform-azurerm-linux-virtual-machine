@@ -176,6 +176,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
       timeout = lookup(termination_notification.value, "timeout", null)
     }
   }
+  os_managed_disk_id           = var.os_managed_disk_id
   user_data                    = var.user_data
   vtpm_enabled                 = var.vtpm_enabled
   virtual_machine_scale_set_id = var.virtual_machine_scale_set_id

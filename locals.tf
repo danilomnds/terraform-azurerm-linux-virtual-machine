@@ -4,6 +4,7 @@ locals {
     provider    = "azr"
     region      = replace(lower(var.location), " ", "")
     create_date = formatdate("DD/MM/YY hh:mm", timeadd(timestamp(), "-3h"))
+    create_date_olam = formatdate("YYYYMMDD-hhmmss", timestamp())
   }
   type_vm = {
     type     = "iaas"

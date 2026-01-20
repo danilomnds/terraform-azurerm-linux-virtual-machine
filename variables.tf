@@ -34,7 +34,7 @@ variable "network_interface" {
 
 variable "admin_username" {
   type      = string
-  default   = "operacao"
+  default   = "operations"
   sensitive = true
 }
 
@@ -57,7 +57,7 @@ variable "os_disk" {
     caching              = string
     storage_account_type = string
     diff_disk_settings = optional(object({
-      optional  = string
+      option  = string
       placement = optional(string)
     }))
     disk_encryption_set_id           = optional(string)
@@ -295,6 +295,11 @@ variable "os_image_notification" {
   default = null
 }
 
+variable "os_managed_disk_id" {
+  type = string
+  default = null
+}
+
 variable "termination_notification" {
   type = object({
     enabled = bool
@@ -306,11 +311,6 @@ variable "termination_notification" {
 variable "user_data" {
   type    = string
   default = null
-}
-
-variable "vm_agent_platform_updates_enabled" {
-  type    = bool
-  default = false
 }
 
 variable "vtpm_enabled" {

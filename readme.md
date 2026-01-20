@@ -1,28 +1,30 @@
 # Module - Linux Virtual Machines
-[![COE](https://img.shields.io/badge/Created%20By-CCoE-blue)]()
-[![HCL](https://img.shields.io/badge/language-HCL-blueviolet)](https://www.terraform.io/)
-[![Azure](https://img.shields.io/badge/provider-Azure-blue)](https://registry.terraform.io/providers/hashicorp/azurerm/latest)
+[![COE](https://img.shields.io/badge/Created%20By-CCoE-blue)]()[![HCL](https://img.shields.io/badge/language-HCL-blueviolet)](https://www.terraform.io/)[![Azure](https://img.shields.io/badge/provider-Azure-blue)](https://registry.terraform.io/providers/hashicorp/azurerm/latest)
 
 Module developed to standardize the creation of Linux Virtual Machines.
 
+---
 ## Compatibility Matrix
 
 | Module Version | Terraform Version | AzureRM Version |
 |----------------|-------------------| --------------- |
 | v1.0.0         | v1.11.3           | 4.26.0          |
+| v1.1.0         | v1.14.3           | 4.57.0          |
 
+---
 ## Specifying a version
 
-To avoid that your code get updates automatically, is mandatory to set the version using the `source` option. 
-By defining the `?ref=***` in the the URL, you can define the version of the module.
+To prevent automatic updates to your code, you must set the version using the `source` option. 
+By defining the `?ref=***` in the URL, you can specify the module version.
 
-Note: The `?ref=***` refers a tag on the git module repo.
+Note: The `?ref=***` references a tag in the git module repository.
 
+---
 ## Default use case
 
 ```hcl
 module "lnx0001" {
-  source    = "git::https://github.com/danilomnds/terraform-azurerm-linux-virtual-machine?ref=v1.0.0"
+  source    = "git::https://github.com/danilomnds/terraform-azurerm-linux-virtual-machine?ref=v1.1.0"
   location = "Brazil South"
   resource_group_name = "<resource group>"
   name = "lnx0001"
@@ -42,7 +44,7 @@ module "lnx0001" {
   source_image_reference = {
       publisher = "RedHat"
       offer = "RHEL"
-      sku = "9.4"
+      sku = "9_7"
       version = "latest"
   }
   # if you want to attach an existing NIC
@@ -50,8 +52,9 @@ module "lnx0001" {
   # set a custom storage account for the boot diagnostics 
   boot_diagnostics = {
     storage_account_uri = "https://<storage account>.blob.core.windows.net/"
-  } 
-  ultra_ssd_enabled = false
+    # if you want to use the default let this way
+    # storage_account_uri = ""
+  }  
   # optional. It would be used when you are deploying an appliance from the market place.
   /* 
   plan = {
@@ -134,7 +137,7 @@ output "vm_name" {
   value = module.lnx0001.vm_name
 }
 ```
-
+---
 ## Input variables
 
 | Name | Description | Type | Default | Required |
@@ -145,10 +148,10 @@ output "vm_name" {
 | name | The name of the Linux Virtual Machine | `string` | n/a | `Yes` |
 | network_interface_ids | A list of Network Interface IDs which should be attached to this Virtual Machine | `list(string)` | n/a | No |
 | os_disk | A os_disk block as defined in the [documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | `object({})` | n/a | `Yes` |
-| resource_group_name | The name of the Resource Group in which the Linux Virtual Machine should be exist | `string` | n/a | `Yes` |
+| resource_group_name | The name of the Resource Group in which the Linux Virtual Machine should exist | `string` | n/a | `Yes` |
 | size | The SKU which should be used for this Virtual Machine, such as Standard_F2 | `string` | n/a | `Yes` |
-| os_disk | A additional_capabilities block as defined in the [documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | `object({})` | n/a | No |
-| admin_password | The Password which should be used for the local-administrator on this Virtual Machine | `string` | n/a | No |
+| additional_capabilities | An additional_capabilities block as defined in the [documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | `object({})` | n/a | No |
+| admin_password | The password which should be used for the local administrator on this Virtual Machine | `string` | n/a | No |
 | admin_ssh_key | One or more admin_ssh_key blocks as defined in the [documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | `list(object({}))` | n/a | No |
 | allow_extension_operations | Should Extension Operations be allowed on this Virtual Machine | `bool` | `true` | No |
 | availability_set_id | Specifies the ID of the Availability Set in which the Virtual Machine should exist | `string` | n/a | No |
@@ -182,16 +185,16 @@ output "vm_name" {
 | source_image_reference | A source_image_reference block as defined in the [documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | `object({})` | n/a | No |
 | tags | A mapping of tags which should be assigned to this Virtual Machine | `object({})` | n/a | No |
 | os_image_notification | A os_image_notification block as defined in the [documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | `object({})` | n/a | No |
+| os_managed_disk_id | The ID of an existing Managed Disk to use as the OS Disk for this Linux Virtual Machine | `string` | n/a | No |
 | termination_notification | A termination_notification block as defined in the [documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | `object({})` | n/a | No |
 | user_data | The Base64-Encoded User Data which should be used for this Virtual Machine | `string` | n/a | No |
-| vm_agent_platform_updates_enabled | Specifies whether VMAgent Platform Updates is enabled | 
-`bool` | `false` | No |
 | vtpm_enabled | Specifies whether vTPM should be enabled on the virtual machine | `bool` | `false` | No |
 | virtual_machine_scale_set_id | Specifies the Orchestrated Virtual Machine Scale Set that this Virtual Machine should be created within | `string` | n/a | No |
 | zone | Specifies the Availability Zones in which this Linux Virtual Machine should be located | `number` | n/a | No |
 | network_interface | One or more nics can be created using this module. Check the [documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) for a full list of available parameters | `list(object({}))` | n/a | No |
 | data_disks | One or more disks can be created using this module. Check the [documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk) for a full list of available parameters | `list(object({}))` | n/a | No |
 
+---
 ## Output variables
 
 | Name | Description |
@@ -202,27 +205,23 @@ output "vm_name" {
 | vm_public_ip | public IPs associated to the VM |
 | vm_private_ip | private IPs associated to the VM |
 
-
+---
 ## Tips
 
-Commands to get information of appliances available on azure market place.
-- 1º List information about a publisher. <br>
-- 2º List information about an specific image of a publisher. <br>
-- 3º Accept the terms of use. <br>
+Commands to get information about appliances available on the Azure Marketplace:
+- List information about a publisher. <br>
+- List information about a specific image from a publisher. <br>
+- Accept the terms of use. <br>
 
 ```az cli
 az vm image list --all --publisher ibm -o table
 az vm image show --offer ibm-security-guardium-multi-cloud --publisher ibm --sku ibm-security-guardium-collector --version 11.3.0
-az vm image terms accept --urn ibm:ibm-security-guardium-multi-cloud:ibm-security-guardium-collector:11.3.0 --subscription ""
+az vm image terms accept --urn ibm:ibm-security-guardium-multi-cloud:ibm-security-guardium-collector:11.3.0 --subscription "TIM IT Network Shared"
 ```
-
+---
 ## Documentation
 
-Terraform Network Interfaces: <br>
-[https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface)<br>
-Terraform Linux Virtual Machines: <br>
-[https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine)<br>
-Terraform Managed Disks: <br>
-[https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk)
-Terraform Disk Attachment: <br>
-[https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_data_disk_attachment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_data_disk_attachment)
+- [Terraform Network Interfaces](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface)
+- [Terraform Linux Virtual Machines](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine)
+- [Terraform Managed Disks](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk)
+- [Terraform Disk Attachment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_data_disk_attachment)
